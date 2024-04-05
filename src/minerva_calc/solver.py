@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class SolutionSet:
 
     def __init__(self) -> None:
@@ -48,21 +49,43 @@ class Solver:
         self.tokens: list[Token] = []
 
 
-    def combine_nums(self, inp: list[str]) -> list[str]:
-        for index, value in enumerate(inp):
-            if value in "0123456789":
-                j: int = index + 1
-                while inp[j] in "0123456789":
-                    inp[index] += inp[j]
-                    del inp[j]
-                    j += 1
+    def combine_nums(self, inp: list[str]):        
+        """ a function that takes a list of strs and combines all adjacent digits into one number
+
+
+        Args:
+            inp (list[str]): example: ['1', '2', '3', '+', '4'] -> ['123', '+', '4']
+        """        
+
+        for index, char in enumerate(inp):
+            # find first digit
+            if char.isdigit():
+                j_index: int = index + 1 if (index + 1) < len(inp) else -1
+                
+                # if reached end of list
+                if j_index == -1: continue
+                
+                # find adjacent nums
+                while inp[j_index].isdigit():
+                    inp[index] += inp[j_index]
+                    # marked for deletion
+                    inp[j_index] = "X"
+                    j_index += 1
+            # delete unecessary indexes
+            inp = [char for char in inp if char != 'X']                
 
 
     def _tokenize(self) -> None:
-        # 2 + 4 -> INTEGER:2 OP:PLUS INTEGER:4
+        # 2 + 4 -> INTEGER:2 OP_PLUS INTEGER:4
         str_tokens: list[str] = [char for char in self.equ]
         self.combine_nums(str_tokens)
 
-    
+
+    def _run_tests(self) -> None:
+        str_tokens: list[str] = [char for char in self.equ]
+        self.combine_nums(str_tokens)
+        print(str_tokens)
+
+
     def evaluate(self) -> None:
         ...
