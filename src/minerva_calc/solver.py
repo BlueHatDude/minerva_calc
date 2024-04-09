@@ -64,7 +64,12 @@ class Solver:
         self.tokens: list[Token] = []
 
 
-    def combine_nums(self, inp: list[str]):        
+    def lower_all(self, inp: list[str]) -> None:
+        for index, s in enumerate(inp):
+            inp[index] = s.lower()
+
+
+    def combine_nums(self, inp: list[str]):
         """ a function that takes a list of strs and combines all adjacent digits into one number
 
 
@@ -75,26 +80,41 @@ class Solver:
         new_inp = inp
 
         for index, char in enumerate(new_inp):
-            # ['1', '2', '3', '4', '+', '2', '4']
-            # 
 
             # find first digit
             if char.isdigit():
-                j_index: int = constrain_num(index + 1, nmax=len(new_inp) - 1, nmin=0)
-                
-                # if reached end of list
-                if j_index == -1:
-                    continue
-                
+                j_index: int = constrain_num(index + 1, nmax=(len(new_inp) - 1), nmin=0)
+
+                # covering edge case where there is a single digit at the end
+                if j_index == index:
+                    break
+
                 # find adjacent nums
                 while new_inp[j_index].isdigit():
                     new_inp[index] += new_inp[j_index]
                     # marked for deletion
                     new_inp[j_index] = "X"
-                    j_index = constrain_num(j_index + 1, nmax=len(new_inp) - 1, nmin=0)
+                    j_index = constrain_num(j_index + 1, nmax=(len(new_inp) - 1), nmin=0)
 
         # delete unecessary indexes
         new_inp = [s for s in new_inp if s != 'X']
+        return new_inp
+
+
+    def combine_letters(self, inp: list[str]) -> None:
+        new_inp = inp
+
+        for index, char in enumerate(new_inp):
+            
+            if char.isalpha():
+                j_index: int = constrain_num(index + 1, nmax=(len(new_inp) - 1), nmin=0)
+                
+                while new_inp[j_index].isalpha():
+                    new_inp[index] += new_inp[j_index]
+                    new_inp[j_index] = '0'
+                    j_index = constrain_num(j_index + 1, nmax=(len(new_inp) - 1), nmin=0)
+
+        new_inp = [s for s in new_inp if s != '0']
         return new_inp
 
 
@@ -104,9 +124,15 @@ class Solver:
         self.combine_nums(str_tokens)
 
 
+    def _parse(self) -> None:
+        ...
+
+
     def _run_tests(self) -> None:
         str_tokens: list[str] = [char for char in self.equ]
         str_tokens = self.combine_nums(str_tokens)
+        str_tokens = self.combine_letters(str_tokens)
+        self.lower_all(str_tokens)
         print(str_tokens)
 
 
