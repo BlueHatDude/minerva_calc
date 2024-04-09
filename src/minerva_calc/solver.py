@@ -1,6 +1,21 @@
 from enum import Enum
 
 
+def constrain_num(n: int, nmax: int, nmin: int) -> int:
+    """ constrains integer value
+
+    Args:
+        n (int): input
+        nmax (int): maximum number
+        nmin (int): minimum number
+
+    Returns:
+        if n is greater than max, return max,
+        if n is less than min, return min
+        else return n    """    
+    return max(min(nmax, n), nmin)
+
+
 class SolutionSet:
 
     def __init__(self) -> None:
@@ -57,22 +72,30 @@ class Solver:
             inp (list[str]): example: ['1', '2', '3', '+', '4'] -> ['123', '+', '4']
         """        
 
-        for index, char in enumerate(inp):
+        new_inp = inp
+
+        for index, char in enumerate(new_inp):
+            # ['1', '2', '3', '4', '+', '2', '4']
+            # 
+
             # find first digit
             if char.isdigit():
-                j_index: int = index + 1 if (index + 1) < len(inp) else -1
+                j_index: int = constrain_num(index + 1, nmax=len(new_inp) - 1, nmin=0)
                 
                 # if reached end of list
-                if j_index == -1: continue
+                if j_index == -1:
+                    continue
                 
                 # find adjacent nums
-                while inp[j_index].isdigit():
-                    inp[index] += inp[j_index]
+                while new_inp[j_index].isdigit():
+                    new_inp[index] += new_inp[j_index]
                     # marked for deletion
-                    inp[j_index] = "X"
-                    j_index += 1
-            # delete unecessary indexes
-            inp = [char for char in inp if char != 'X']                
+                    new_inp[j_index] = "X"
+                    j_index = constrain_num(j_index + 1, nmax=len(new_inp) - 1, nmin=0)
+
+        # delete unecessary indexes
+        new_inp = [s for s in new_inp if s != 'X']
+        return new_inp
 
 
     def _tokenize(self) -> None:
@@ -83,7 +106,7 @@ class Solver:
 
     def _run_tests(self) -> None:
         str_tokens: list[str] = [char for char in self.equ]
-        self.combine_nums(str_tokens)
+        str_tokens = self.combine_nums(str_tokens)
         print(str_tokens)
 
 
