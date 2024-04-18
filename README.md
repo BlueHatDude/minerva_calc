@@ -14,6 +14,12 @@ from minerva_calc.solver import Solver
 result = Solver("2 + 4").evaluate()
 print(result) # 6.0
 
-result
+result = Solver("(2 - 4) * 8").evaluate()
+print(result) # -16.0
 
+result = Solver("cos(PI/3)")
+print(result) # 0.5
+
+result = Solver("ln(e^5)").evaluate()
+print(result) # 5
 ```
