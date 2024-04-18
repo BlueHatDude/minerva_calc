@@ -11,11 +11,9 @@ Syntax
 ```
 from minerva_calc.solver import Solver
 
-result_one = Solver("2 + 4").evaluate()
-print(result_one) # 6.0
+result = Solver("2 + 4").evaluate()
+print(result) # 6.0
 
-equ_one = Solver("2x + 5 = 10")
-print(equ_one.get_var()) # {'x': 2.5}
-print(equ_one.evalute()) # 10.0
+result
 
 ```
